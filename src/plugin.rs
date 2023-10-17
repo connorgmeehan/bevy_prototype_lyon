@@ -18,7 +18,7 @@ use bevy::{
         query::{Changed, Or},
         system::{Query, ResMut, Resource},
     },
-    log::error,
+    log::{debug_span, error},
     prelude::{
         Color, Deref, DerefMut, IntoSystemConfigs, IntoSystemSetConfig, PostUpdate, SystemSet,
     },
@@ -73,6 +73,9 @@ fn mesh_shapes_system(
         Or<(Changed<Path>, Changed<Fill>, Changed<Stroke>)>,
     >,
 ) {
+    #[cfg(feature = "trace")]
+    let _span = debug_span!("mesh_shapes_system").entered();
+
     for (maybe_fill_mode, maybe_stroke_mode, path, mut mesh) in &mut query {
         let mut buffers = VertexBuffers::new();
 
